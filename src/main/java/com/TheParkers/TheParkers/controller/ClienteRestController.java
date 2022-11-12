@@ -57,19 +57,6 @@ public class ClienteRestController {
         }
     }
     
-   /* 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody Cliente cliente, @PathVariable Integer id) {
-        try {
-            Cliente existCliente = clienteService.BuscarClientePorId(id);
-            cliente.setId_cliente(id);            
-            clienteService.Guardar(cliente);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }*/
-    
     
     @DeleteMapping(value = "/{idClient}")
     public ResponseEntity<Void> deleteClienteByID(@PathVariable int idClient){
