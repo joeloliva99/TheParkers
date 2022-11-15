@@ -5,6 +5,7 @@ import com.ThParkers.TheParkers.repository.EmpleadoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmpleadoService {
@@ -14,5 +15,14 @@ public class EmpleadoService {
     }
     public List<Empleado> findAllEmpleados() {
         return empleadoRepository.findAll();
+    }
+    public boolean save(Empleado empleado) {
+        empleadoRepository.saveAndFlush(empleado);
+        Optional<Empleado> empleadoOptional = empleadoRepository.findEmpleadoByRutEmpleado(empleado.getRutEmpleado());
+        return empleadoOptional.isPresent();
+    }
+
+    public Optional<Empleado> findEmpleadoByRUT(String rutCliente) {
+        return empleadoRepository.findEmpleadoByRutEmpleado(rutCliente);
     }
 }
