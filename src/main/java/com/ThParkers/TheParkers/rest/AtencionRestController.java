@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -38,7 +39,7 @@ public class AtencionRestController {
         }
     }
     @PutMapping(value = "/{idAtencion}")
-    public ResponseEntity<Void> saleAuto(@PathVariable int idAtencion) {
+    public ResponseEntity<Void> saleAuto(@PathVariable int idAtencion) throws ParseException {
         boolean salidaIsAlright = atencionService.atencionFuera(idAtencion);
         if (salidaIsAlright){
             return new ResponseEntity<>(HttpStatus.OK);

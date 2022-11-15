@@ -2,15 +2,20 @@ package com.ThParkers.TheParkers.service;
 
 import com.ThParkers.TheParkers.dummy.AtencionNueva;
 import com.ThParkers.TheParkers.model.Atencion;
+import com.ThParkers.TheParkers.model.Boleta;
 import com.ThParkers.TheParkers.model.Cliente;
 import com.ThParkers.TheParkers.model.Vehiculo;
-import com.ThParkers.TheParkers.repository.ClienteRepository;
-import com.ThParkers.TheParkers.repository.VehiculoRepository;
-import com.ThParkers.TheParkers.repository.AtencionRepository;
+import com.ThParkers.TheParkers.repository.*;
+import jdk.jfr.Period;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +25,18 @@ public class AtencionService {
     private VehiculoRepository vehiculoRepository;
     private AtencionRepository atencionRepository;
     private EstacionamientoService estacionamientoService;
+    private PlantaRepository plantaRepository;
+    private TipoVehiculoService tipoVehiculoService;
+    private BoletaRepository boletaRepository;
 
-    public AtencionService(AtencionRepository atencionRepository, ClienteRepository clienteRepository, VehiculoRepository vehiculoRepository, EstacionamientoService estacionamientoService) {
+    public AtencionService(AtencionRepository atencionRepository, ClienteRepository clienteRepository, VehiculoRepository vehiculoRepository, EstacionamientoService estacionamientoService, PlantaRepository plantaRepository, TipoVehiculoService tipoVehiculoService, BoletaRepository boletaRepository) {
         this.atencionRepository = atencionRepository;
         this.clienteRepository = clienteRepository;
         this.vehiculoRepository = vehiculoRepository;
         this.estacionamientoService = estacionamientoService;
+        this.plantaRepository = plantaRepository;
+        this.tipoVehiculoService = tipoVehiculoService;
+        this.boletaRepository = boletaRepository;
     }
 
     public List<Atencion> findAllAtenciones() {
@@ -64,15 +75,46 @@ public class AtencionService {
         }
     }
 
-    public boolean atencionFuera (int idAtencion) {
+    public boolean atencionFuera (int idAtencion) throws ParseException {
         Optional<Atencion> atencionOptional = atencionRepository.findById(idAtencion);
         if (atencionOptional.isPresent()){
             Atencion atencionTemporal = atencionOptional.get();
             atencionTemporal.setHoraSalida(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().getTime()));
             estacionamientoService.disponibilizarEstacionamiento(atencionTemporal.getId_estacionamiento());
+            generarBoleta(0, atencionTemporal);
             atencionRepository.saveAndFlush(atencionTemporal);
             return true;
         }
         return false;
+    }
+
+    public boolean generarBoleta (int descuento, Atencion atencionTemporal) throws ParseException {
+        Boleta boletaNueva = new Boleta();
+        boletaNueva.setAtencionID(atencionTemporal.getAtencionID());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date Entrada = df.parse(atencionTemporal.getHoraEntrada());
+        Date Salida = df.parse(atencionTemporal.getHoraSalida());
+        int horas = hoursDifference(Salida,Entrada);
+        //La primera hora se cobra sí o sí
+        if (horas < 1) {
+            horas = 1;
+        }
+        //El id de la planta se debería obtener a través de la sesión. Dado que no está implementada, haremos
+        //de cuenta de que solo trabajamos con la planta 3
+
+        int tarifaPlanta = (plantaRepository.findById(3).get().getTarifa_planta());
+        int tipoVehiculo = (vehiculoRepository.findById(atencionTemporal.getId_vehiculo())).get().getId_tipoVehiculo();
+        int tarifaVehiculo = tipoVehiculoService.devolverTarifa(tipoVehiculo);
+        int subtotal = (tarifaPlanta + tarifaVehiculo) * horas;
+        boletaNueva.setSubtotal(subtotal);
+        boletaNueva.setDescuento(descuento);
+        boletaNueva.setTotal(subtotal-descuento);
+        boletaRepository.saveAndFlush(boletaNueva);
+        Optional<Boleta> boletaOptional = boletaRepository.findBoletaByAtencionID(atencionTemporal.getAtencionID());
+        return boletaOptional.isPresent();
+    }
+    private static int hoursDifference(Date date1, Date date2) {
+        final int MILLI_TO_HOUR = 1000 * 60 * 60;
+        return (int) (date1.getTime() - date2.getTime()) / MILLI_TO_HOUR;
     }
 }
