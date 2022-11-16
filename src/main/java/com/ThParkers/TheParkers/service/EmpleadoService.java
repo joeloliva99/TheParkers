@@ -25,4 +25,14 @@ public class EmpleadoService {
     public Optional<Empleado> findEmpleadoByRUT(String rutCliente) {
         return empleadoRepository.findEmpleadoByRutEmpleado(rutCliente);
     }
+
+    public boolean deleteEmpleadoById(int idEmp) {
+        Optional<Empleado> empleadoOptional = empleadoRepository.findById(idEmp);
+        if (empleadoOptional.isPresent()) {
+            empleadoRepository.deleteById(idEmp);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

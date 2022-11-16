@@ -48,4 +48,15 @@ public class EmpleadoRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
+    @DeleteMapping(value = "/{idEmp}")
+    public ResponseEntity<Void> deleteEmpleadoById(@PathVariable int idEmp) {
+        boolean eliminado = empleadoService.deleteEmpleadoById(idEmp);
+        if (eliminado) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
