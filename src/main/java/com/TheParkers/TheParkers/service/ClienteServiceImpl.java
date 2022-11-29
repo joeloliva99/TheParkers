@@ -37,8 +37,14 @@ public class ClienteServiceImpl implements ClienteService {
 	@Override
 	public boolean Guardar(cliente cliente) {
 		repCliente.saveAndFlush(cliente);
-        Optional<com.TheParkers.TheParkers.model.cliente> clienteOptional = repCliente.findClienteByRutCliente(cliente.getRutCliente());
-        return clienteOptional.isPresent();
+        Optional<cliente> clienteOptional = repCliente.findClienteByRutCliente(cliente.getRutCliente());
+        if(clienteOptional.isEmpty()) {
+            repCliente.saveAndFlush(cliente);
+            clienteOptional = repCliente.findClienteByNombre(cliente.getNombreCliente());
+            return clienteOptional.isPresent();
+        } else {
+            return false;
+        }
 		
 	}
 	

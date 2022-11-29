@@ -10,6 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<cliente, Integer> {
+	
+	Optional<cliente> findClienteByNombre(String nombre);
 	Optional<cliente> findClienteByRutCliente(String rutCliente);
 
 }
