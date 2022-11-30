@@ -21,7 +21,7 @@ import com.TheParkers.TheParkers.service.ClienteServiceImpl;
 import com.TheParkers.TheParkers.model.cliente;
 
 @ExtendWith(MockitoExtension.class)
-public class EmpleadoServiceTest {
+public class ClienteServiceTest {
 	
 	@Mock
     private ClienteRepository clienteRepository;
