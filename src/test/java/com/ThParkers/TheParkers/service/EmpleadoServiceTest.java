@@ -88,6 +88,38 @@ public class EmpleadoServiceTest {
         assertFalse(resultado);
 	}
 	
+	@Test
+	public void siInvocoBuscarClientePorRUTYExisteClienteDebeRetornarElCliente() {
+		// Arrange
+        cliente cliente = getClientePorRUT("19127345K");
+        Optional<cliente> clienteOptional = Optional.of(cliente);
+        when(clienteRepository.findClienteByRutCliente(cliente.getRutCliente()))
+        		.thenReturn(clienteOptional);
+
+        // Act
+        cliente resultado = clienteService.BuscarClientePorRUT(cliente.getRutCliente());
+
+        // Assert
+        assertNotNull(resultado);
+        
+	}
+	
+	@Test
+	public void siInvocoBuscarClientePorRUTYNoExisteClienteNoDebeRetornarNada() {
+		// Arrange
+        cliente cliente = new cliente();
+        Optional<cliente> clienteOptional = Optional.of(cliente);
+        when(clienteRepository.findClienteByRutCliente(cliente.getRutCliente()))
+        		.thenReturn(clienteOptional);
+
+        // Act
+        cliente resultado = clienteService.BuscarClientePorRUT(cliente.getRutCliente());
+
+        // Assert
+        assertNotNull(resultado);
+        
+	}
+	
 	
 	private List<cliente> getClientes() {
         List<cliente> clientes = new ArrayList<>();
@@ -111,5 +143,20 @@ public class EmpleadoServiceTest {
         clientes.add(cliente);
         return clientes;
     }
+	private cliente getClientePorRUT(String RUT) {
+		cliente cliente = new cliente();
+		cliente.setId_cliente(1);
+        cliente.setRutCliente("19127345K");
+        cliente.setNombreCliente("Juan Mendez");
+        cliente.setTelefonoCliente(12345678);
+        cliente.setDireccionCliente("Av. Prueba 1");
+        cliente.setCorreo("juan.mendez@supermail.com");
+        
+        if(cliente.getRutCliente()==RUT) {
+        	return cliente;
+        }else {
+        	return null;
+        }
+	}
 
 }
