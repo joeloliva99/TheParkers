@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.TheParkers.TheParkers.model.cliente;
 import com.TheParkers.TheParkers.service.ClienteService;
+
 import java.util.Optional;
 
 @RestController
@@ -34,8 +35,13 @@ public class ClienteRestController {
     }
 
     @GetMapping(value = "")
-    public List<cliente> list() {
-        return clienteService.buscarTodosLosCliente();
+    public ResponseEntity <List<cliente>> getAllClientes() {
+    	List<cliente> clienteList = clienteService.buscarTodosLosCliente();
+        if (!clienteList.isEmpty()) {
+            return new ResponseEntity<>(clienteList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     
     @GetMapping(value = "/{RUTCliente}")
