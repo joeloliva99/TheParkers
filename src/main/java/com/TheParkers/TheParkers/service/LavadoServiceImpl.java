@@ -1,12 +1,12 @@
 package com.TheParkers.TheParkers.service;
 
-import java.util.List; 
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.TheParkers.TheParkers.service.LavadoService;
 import com.TheParkers.TheParkers.model.Lavado;
 import com.TheParkers.TheParkers.repository.RepositorioLavado;
 
@@ -22,7 +22,6 @@ public class LavadoServiceImpl implements LavadoService{
 		this.repLavado = repLavado;
 		
 	}
-	
 
 	@Override
 	public List<Lavado> buscarTodosLosLavados() {
@@ -34,5 +33,9 @@ public class LavadoServiceImpl implements LavadoService{
 		return repLavado.findById(id).get();
 	}
 	
+	@Override
+	public Optional<Lavado>findLavadoById(int id_lavado){
+		return repLavado.findLavadoById(id_lavado);
+	}
 
 }

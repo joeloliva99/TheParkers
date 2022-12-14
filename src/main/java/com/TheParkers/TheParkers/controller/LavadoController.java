@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.TheParkers.TheParkers.model.Lavado;
 import com.TheParkers.TheParkers.service.LavadoService;
 
+
+
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @RestController
@@ -27,17 +30,22 @@ public class LavadoController {
     }
 
     @GetMapping(value = "")
-    public List<Lavado> list() {
-        return lavadoService.buscarTodosLosLavados();
+    public ResponseEntity <List<Lavado>> getAllLavados() {
+        List<Lavado> lavadoList = lavadoService.buscarTodosLosLavados();
+        if(!lavadoList.isEmpty()) {
+        	return new ResponseEntity<>(lavadoList,HttpStatus.OK);
+        }else {
+        	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Lavado> get(@PathVariable int id) {
-        try {
-            Lavado lavado = lavadoService.BuscarLavadoPorId(id);
-            return new ResponseEntity<Lavado>(lavado, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<Lavado>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Lavado> getLavadoById(@PathVariable int id) {
+        Optional<Lavado>lavadoOptional = lavadoService.findLavadoById(id);
+        if(lavadoOptional.isPresent()) {
+        	return new ResponseEntity<>(lavadoOptional.get(),HttpStatus.OK);
+        }else {
+        	return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
