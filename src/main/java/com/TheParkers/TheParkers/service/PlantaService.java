@@ -11,5 +11,7 @@ public interface PlantaService {
 	public List<Planta> buscarTodasLasPlantas();
 	
 	public Optional<Planta> findPlantaById(int id_planta);
+	
+	public boolean creaNuevaPlanta(Planta planta);
 
 }

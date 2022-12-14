@@ -32,4 +32,17 @@ public class PlantaServiceImpl implements PlantaService {
 		return repPlanta.findPlantaById(id_planta);
 	}
 
+	@Override
+	public boolean creaNuevaPlanta(Planta planta) {
+		repPlanta.saveAndFlush(planta);
+		Optional<Planta>plantaOptional = repPlanta.findPlantaById(planta.getId_planta());
+		
+		if(plantaOptional.isEmpty()) {
+			repPlanta.saveAndFlush(planta);
+			return plantaOptional.isPresent();
+		}else {
+			return false;
+		}
+	}
+
 }

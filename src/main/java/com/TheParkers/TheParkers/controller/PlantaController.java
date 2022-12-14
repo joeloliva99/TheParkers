@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,6 +44,16 @@ public class PlantaController {
 			return new ResponseEntity<>(plantaOptional.get(), HttpStatus.OK);
 		}else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PostMapping(value = "")
+    public ResponseEntity<Void> newPlanta(@RequestBody Planta planta){
+		boolean allright = plantaService.creaNuevaPlanta(planta);
+		if(allright) {
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
