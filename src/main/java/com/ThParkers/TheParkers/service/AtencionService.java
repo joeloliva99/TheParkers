@@ -6,18 +6,16 @@ import com.ThParkers.TheParkers.model.Boleta;
 import com.ThParkers.TheParkers.model.Cliente;
 import com.ThParkers.TheParkers.model.Vehiculo;
 import com.ThParkers.TheParkers.repository.*;
-import jdk.jfr.Period;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class AtencionService {
@@ -62,7 +60,7 @@ public class AtencionService {
             Atencion atencion = new Atencion();
             atencion.setHay_lavado(atencionNueva.isHay_lavado());
             atencion.setHoraEntrada(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().getTime()));
-            atencion.setId_cliente(id_cliente);
+            atencion.setIdCliente(id_cliente);
             atencion.setId_empleado(id_empleado);
             atencion.setId_vehiculo(id_vehiculo);
             atencion.setId_estacionamiento(idEstacionamiento);
@@ -81,14 +79,15 @@ public class AtencionService {
             Atencion atencionTemporal = atencionOptional.get();
             atencionTemporal.setHoraSalida(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().getTime()));
             estacionamientoService.disponibilizarEstacionamiento(atencionTemporal.getId_estacionamiento());
-            generarBoleta(0, atencionTemporal);
+            generarBoleta(atencionTemporal);
             atencionRepository.saveAndFlush(atencionTemporal);
             return true;
         }
         return false;
     }
 
-    public boolean generarBoleta (int descuento, Atencion atencionTemporal) throws ParseException {
+    public boolean generarBoleta (Atencion atencionTemporal) throws ParseException {
+        int descuento = 0;
         Boleta boletaNueva = new Boleta();
         boletaNueva.setAtencionID(atencionTemporal.getAtencionID());
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -106,6 +105,9 @@ public class AtencionService {
         int tipoVehiculo = (vehiculoRepository.findById(atencionTemporal.getId_vehiculo())).get().getId_tipoVehiculo();
         int tarifaVehiculo = tipoVehiculoService.devolverTarifa(tipoVehiculo);
         int subtotal = (tarifaPlanta + tarifaVehiculo) * horas;
+        if (esClienteFrecuente(atencionTemporal.getIdCliente())){
+            descuento = ((subtotal*20)/100);
+        }
         boletaNueva.setSubtotal(subtotal);
         boletaNueva.setDescuento(descuento);
         boletaNueva.setTotal(subtotal-descuento);
@@ -116,5 +118,39 @@ public class AtencionService {
     private static int hoursDifference(Date date1, Date date2) {
         final int MILLI_TO_HOUR = 1000 * 60 * 60;
         return (int) (date1.getTime() - date2.getTime()) / MILLI_TO_HOUR;
+    }
+
+    public List<Atencion> findAtencionesPorIdCliente(int idCliente){
+        return atencionRepository.findAtencionByIdCliente(idCliente);
+    }
+
+    public boolean esClienteFrecuente (int idCliente) throws ParseException {
+        List<Atencion> atencionList = findAtencionesPorIdCliente(idCliente);
+        int cuentaFrecuente = 0;
+        // El cliente se ha atendido menos de tres veces en el estacionamiento
+        if (atencionList.size() < 3) {
+            return false;
+        } else {
+            // Calcular si las tres atenciones recuperadas fueron dentro de la semana
+            for (int i=1; i <=3; i++) {
+                if (diasDeDiferencia(atencionList.get(atencionList.size() - i).getHoraEntrada()) < 7) {
+                    cuentaFrecuente++;
+                }
+            }
+        }
+        if (cuentaFrecuente == 3) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public static long diasDeDiferencia(String horaEntrada) throws ParseException {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date Entrada = df.parse(horaEntrada);
+        Date actual = Calendar.getInstance().getTime();
+        long diff = actual.getTime() - Entrada.getTime();
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 }

@@ -10,7 +10,8 @@ public class Atencion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int atencionID;
-    private int id_cliente;
+    @Column(name="id_cliente")
+    private int idCliente;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private String horaEntrada;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -29,12 +30,12 @@ public class Atencion {
         this.atencionID = atencionID;
     }
 
-    public int getId_cliente() {
-        return id_cliente;
+    public int getIdCliente() {
+        return idCliente;
     }
 
-    public void setId_cliente(int id_cliente) {
-        this.id_cliente = id_cliente;
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 
     public String getHoraEntrada() {
