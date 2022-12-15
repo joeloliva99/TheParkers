@@ -9,7 +9,8 @@ public class TipoVehiculo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_tipoVehiculo;
-    private String nom_tipoVehiculo;
+    @Column(name = "nom_tipoVehiculo")
+    private String NTipoVehiculo;
     private int tarifa;
 
     public int getId_tipoVehiculo() {
@@ -20,12 +21,12 @@ public class TipoVehiculo {
         this.id_tipoVehiculo = id_tipoVehiculo;
     }
 
-    public String getNom_tipoVehiculo() {
-        return nom_tipoVehiculo;
+    public String getNTipoVehiculo() {
+        return NTipoVehiculo;
     }
 
-    public void setNom_tipoVehiculo(String nom_tipoVehiculo) {
-        this.nom_tipoVehiculo = nom_tipoVehiculo;
+    public void setNTipoVehiculo(String NTipoVehiculo) {
+        this.NTipoVehiculo = NTipoVehiculo;
     }
 
     public int getTarifa() {
