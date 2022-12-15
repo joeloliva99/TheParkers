@@ -25,7 +25,7 @@ public class PlantaController {
 	
 	public PlantaController(PlantaService plantaService) {
 		this.plantaService = plantaService;
-	}
+	}	
 	
 	@GetMapping(value = "")
 	public ResponseEntity<List<Planta>>getAllPlantas(){
