@@ -1,4 +1,4 @@
-package com.ThParkers.TheParkers;
+package com.TheParkers.TheParkers;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
