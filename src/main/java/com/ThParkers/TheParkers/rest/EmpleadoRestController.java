@@ -19,9 +19,19 @@ public class EmpleadoRestController {
         this.empleadoService = empleadoService;
     }
 
-    @GetMapping(value = "")
+    @GetMapping(value = "/all")
     public ResponseEntity<List<Empleado>> getAllEmpleados() {
         List<Empleado> empleadoList = empleadoService.findAllEmpleados();
+        if (!empleadoList.isEmpty()){
+            return new ResponseEntity<>(empleadoList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(value = "")
+    public ResponseEntity<List<Empleado>> getAllEmpleadosActivos() {
+        List<Empleado> empleadoList = empleadoService.findAllEmpleadosActivos();
         if (!empleadoList.isEmpty()){
             return new ResponseEntity<>(empleadoList, HttpStatus.OK);
         } else {
@@ -54,6 +64,16 @@ public class EmpleadoRestController {
     public ResponseEntity<Void> deleteEmpleadoById(@PathVariable int idEmp) {
         boolean eliminado = empleadoService.deleteEmpleadoById(idEmp);
         if (eliminado) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping(value = "/switch/{idEmp}")
+    public ResponseEntity<Void> switchEmpleadoEstado(@PathVariable int idEmp) {
+        boolean allright = empleadoService.SwitchEstado(idEmp);
+        if (allright){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

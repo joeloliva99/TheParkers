@@ -1,7 +1,6 @@
 package com.ThParkers.TheParkers.service;
 
 import com.ThParkers.TheParkers.model.TipoVehiculo;
-import com.ThParkers.TheParkers.model.Vehiculo;
 import com.ThParkers.TheParkers.repository.TipoVehiculoRepository;
 import org.springframework.stereotype.Service;
 

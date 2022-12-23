@@ -115,6 +115,7 @@ public class AtencionService {
         Optional<Boleta> boletaOptional = boletaRepository.findBoletaByAtencionID(atencionTemporal.getAtencionID());
         return boletaOptional.isPresent();
     }
+
     private static int hoursDifference(Date date1, Date date2) {
         final int MILLI_TO_HOUR = 1000 * 60 * 60;
         return (int) (date1.getTime() - date2.getTime()) / MILLI_TO_HOUR;

@@ -1,8 +1,6 @@
 package com.ThParkers.TheParkers.rest;
 
-import com.ThParkers.TheParkers.model.Planta;
 import com.ThParkers.TheParkers.model.TipoVehiculo;
-import com.ThParkers.TheParkers.model.Vehiculo;
 import com.ThParkers.TheParkers.service.TipoVehiculoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

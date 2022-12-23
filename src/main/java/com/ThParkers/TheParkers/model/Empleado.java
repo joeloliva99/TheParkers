@@ -13,6 +13,7 @@ public class Empleado {
     private int telefonoEmpleado;
     private String cargo;
     private int planta;
+    private boolean activo;
 
     public int getId_empleado() {
         return id_empleado;
@@ -60,5 +61,13 @@ public class Empleado {
 
     public void setPlanta(int planta) {
         this.planta = planta;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }
