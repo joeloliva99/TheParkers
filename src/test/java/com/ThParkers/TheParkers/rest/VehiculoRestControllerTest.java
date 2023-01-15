@@ -151,11 +151,11 @@ public class VehiculoRestControllerTest {
     public void siInvocoDeleteVehiculoByIDYSePuedeBorrarElVehiculoRetornaStatusOk() throws Exception{
         // Arrange
         Vehiculo vehiculo = getListaVehiculos().get(0);
-        when(vehiculoService.deleteVehiculoById(vehiculo.getId_vehiculo())).thenReturn(true);
+        when(vehiculoService.deleteVehiculoById(vehiculo.getIdVehiculo())).thenReturn(true);
 
         // Act
         MockHttpServletResponse response = mockMvc
-                .perform(MockMvcRequestBuilders.delete("/vehiculos/"+vehiculo.getId_vehiculo())
+                .perform(MockMvcRequestBuilders.delete("/vehiculos/"+vehiculo.getIdVehiculo())
                         .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
 
         // Assert
@@ -180,12 +180,12 @@ public class VehiculoRestControllerTest {
     private List<Vehiculo> getListaVehiculos() {
         List<Vehiculo> vehiculos = new ArrayList<>();
         Vehiculo vehiculo = new Vehiculo();
-        vehiculo.setId_vehiculo(1);
+        vehiculo.setIdVehiculo(1);
         vehiculo.setPatente("AB1234");
         vehiculo.setId_tipoVehiculo(0);
         vehiculos.add(vehiculo);
         vehiculo = new Vehiculo();
-        vehiculo.setId_vehiculo(2);
+        vehiculo.setIdVehiculo(2);
         vehiculo.setPatente("UB1234");
         vehiculo.setId_tipoVehiculo(0);
         vehiculos.add(vehiculo);

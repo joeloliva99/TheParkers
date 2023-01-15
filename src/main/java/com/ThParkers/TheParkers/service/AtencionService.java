@@ -7,14 +7,14 @@ import com.ThParkers.TheParkers.model.Cliente;
 import com.ThParkers.TheParkers.model.Vehiculo;
 import com.ThParkers.TheParkers.repository.*;
 import org.springframework.stereotype.Service;
+import com.ThParkers.TheParkers.dummy.EmailDetails;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.Month;
+import java.time.format.TextStyle;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -26,8 +26,14 @@ public class AtencionService {
     private PlantaRepository plantaRepository;
     private TipoVehiculoService tipoVehiculoService;
     private BoletaRepository boletaRepository;
+    private PlantaService plantaService;
+    private EmailServiceImpl emailService;
 
-    public AtencionService(AtencionRepository atencionRepository, ClienteRepository clienteRepository, VehiculoRepository vehiculoRepository, EstacionamientoService estacionamientoService, PlantaRepository plantaRepository, TipoVehiculoService tipoVehiculoService, BoletaRepository boletaRepository) {
+    public AtencionService(AtencionRepository atencionRepository, ClienteRepository clienteRepository,
+                           VehiculoRepository vehiculoRepository, EstacionamientoService estacionamientoService,
+                           PlantaRepository plantaRepository, TipoVehiculoService tipoVehiculoService,
+                           BoletaRepository boletaRepository, PlantaService plantaService,
+                           EmailServiceImpl emailService) {
         this.atencionRepository = atencionRepository;
         this.clienteRepository = clienteRepository;
         this.vehiculoRepository = vehiculoRepository;
@@ -35,6 +41,8 @@ public class AtencionService {
         this.plantaRepository = plantaRepository;
         this.tipoVehiculoService = tipoVehiculoService;
         this.boletaRepository = boletaRepository;
+        this.plantaService = plantaService;
+        this.emailService = emailService;
     }
 
     public List<Atencion> findAllAtenciones() {
@@ -47,7 +55,7 @@ public class AtencionService {
         int id_empleado = 5;
         //Este dato se debería obtener a través de la serión del usuario; no sería seguro que el propio usuario digitara la planta,
         //puesto que podría controlar la disponibilidad de estacionamientos en otras plantas.
-        int idPlanta = 3;
+        int idPlanta = 4;
         int idEstacionamiento = estacionamientoService.devolverIdEstacionamiento(idPlanta,atencionNueva.getNronivel(),atencionNueva.getNroEstacionamiento());
         Optional<Cliente> optionalCliente = clienteRepository.findClienteByRutCliente(atencionNueva.getRutCliente());
         Optional<Vehiculo> optionalVehiculo = vehiculoRepository.findVehiculoBypatente(atencionNueva.getPatente());
@@ -55,8 +63,8 @@ public class AtencionService {
             continuar = true;
         }
         if (continuar) {
-            int id_cliente = optionalCliente.get().getId_cliente();
-            int id_vehiculo = optionalVehiculo.get().getId_vehiculo();
+            int id_cliente = optionalCliente.get().getIdCliente();
+            int id_vehiculo = optionalVehiculo.get().getIdVehiculo();
             Atencion atencion = new Atencion();
             atencion.setHay_lavado(atencionNueva.isHay_lavado());
             atencion.setHoraEntrada(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().getTime()));
@@ -81,6 +89,22 @@ public class AtencionService {
             estacionamientoService.disponibilizarEstacionamiento(atencionTemporal.getId_estacionamiento());
             generarBoleta(atencionTemporal);
             atencionRepository.saveAndFlush(atencionTemporal);
+            EmailDetails detalles = new EmailDetails();
+            int cliente = atencionTemporal.getIdCliente();
+            String email = clienteRepository.findClienteByIdCliente(cliente).get().getCorreo();
+            String nombre = clienteRepository.findClienteByIdCliente(cliente).get().getNombreCliente();
+            String patente = vehiculoRepository.findVehiculoByIdVehiculo(atencionTemporal.getId_vehiculo()).get().getPatente();
+            String hora = atencionTemporal.getHoraSalida();
+            String[] fechaHoraPartida = hora.split(" ");
+            String[] fechaPartida = fechaHoraPartida[0].split("-");
+            detalles.setRecipient(email);
+            Month mes = Month.of(Integer.parseInt(fechaPartida[1]));
+            String horaImprimir = "el " + fechaPartida[2] + " de " + mes.getDisplayName(TextStyle.FULL, new Locale("es", "ES")).toLowerCase()
+                    + " de " + fechaPartida[0] + " a las " + fechaHoraPartida[1];
+            detalles.setSubject("Su vehículo ha salido");
+            detalles.setMsgBody(nombre + ":\n\nSu vehículo con patente " + patente + " ha salido de nuestras instalaciones " +
+                    horaImprimir + "\n\n¡Gracias por su preferencia!" );
+            emailService.sendSimpleMail(detalles);
             return true;
         }
         return false;
@@ -88,6 +112,7 @@ public class AtencionService {
 
     public boolean generarBoleta (Atencion atencionTemporal) throws ParseException {
         int descuento = 0;
+        int idPlanta = 4;
         Boleta boletaNueva = new Boleta();
         boletaNueva.setAtencionID(atencionTemporal.getAtencionID());
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -101,10 +126,12 @@ public class AtencionService {
         //El id de la planta se debería obtener a través de la sesión. Dado que no está implementada, haremos
         //de cuenta de que solo trabajamos con la planta 3
 
-        int tarifaPlanta = (plantaRepository.findById(3).get().getTarifa_planta());
+        int tarifaPlanta = (plantaRepository.findById(idPlanta).get().getTarifa_planta());
         int tipoVehiculo = (vehiculoRepository.findById(atencionTemporal.getId_vehiculo())).get().getId_tipoVehiculo();
         int tarifaVehiculo = tipoVehiculoService.devolverTarifa(tipoVehiculo);
         int subtotal = (tarifaPlanta + tarifaVehiculo) * horas;
+        // Aplicar el aumento según qué tan ocupado esté el estacionamiento
+        subtotal = plantaService.getTarifaActual(idPlanta, subtotal);
         if (esClienteFrecuente(atencionTemporal.getIdCliente())){
             descuento = ((subtotal*20)/100);
         }

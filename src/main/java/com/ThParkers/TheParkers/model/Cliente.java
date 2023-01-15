@@ -7,19 +7,20 @@ import javax.persistence.*;
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_cliente;
+    @Column(name="id_cliente")
+    private int idCliente;
     private String rutCliente;
     private String nombreCliente;
     private int telefonoCliente;
     private String direccionCliente;
     private String correo;
 
-    public int getId_cliente() {
-        return id_cliente;
+    public int getIdCliente() {
+        return idCliente;
     }
 
-    public void setId_cliente(int id_cliente) {
-        this.id_cliente = id_cliente;
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 
     public String getRutCliente() {

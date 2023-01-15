@@ -24,7 +24,7 @@ public class EstacionamientoService {
 
     public List<Estacionamiento> estacionamientosDisponiblesPorNivel(int nroNivel) {
         //Este dato se debería obtener a través de la sesión del usuario. Un usuario de la planta 1 no tendría la necesidad
-        // de conocer qué estacionamientos están disponibles en la plabta 2.
+        // de conocer qué estacionamientos están disponibles en la planta 2.
         int idPlanta = 3;
         int id_nivel = nivelService.devolverIDNivel(nroNivel,idPlanta);
         List<Estacionamiento> disponibles = findAllEstacionamientosByPlantaNivel(id_nivel).stream()

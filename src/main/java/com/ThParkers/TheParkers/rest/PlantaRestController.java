@@ -1,5 +1,6 @@
 package com.ThParkers.TheParkers.rest;
 
+import com.ThParkers.TheParkers.dummy.StatusPlanta;
 import com.ThParkers.TheParkers.service.PlantaService;
 import com.ThParkers.TheParkers.model.Planta;
 import com.ThParkers.TheParkers.dummy.PlantaTarifa;
@@ -7,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,4 +72,15 @@ public class PlantaRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping(value = "/{idPlant}/status")
+    public ResponseEntity<StatusPlanta> getStatusPlantaById(@PathVariable int idPlant) {
+        Optional<StatusPlanta> optionalStatusPlanta = plantaService.returnestatusById(idPlant);
+        if (optionalStatusPlanta.isPresent()) {
+            return new ResponseEntity<>(optionalStatusPlanta.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

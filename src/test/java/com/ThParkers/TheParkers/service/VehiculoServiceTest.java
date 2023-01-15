@@ -116,7 +116,7 @@ public class VehiculoServiceTest {
         // Arrange
         Vehiculo vehiculo = getVehiculos().get(0);
         Optional<Vehiculo> vehiculoOptional = Optional.of(vehiculo);
-        when(vehiculoRepository.findById(vehiculo.getId_vehiculo())).thenReturn(vehiculoOptional);
+        when(vehiculoRepository.findById(vehiculo.getIdVehiculo())).thenReturn(vehiculoOptional);
 
         // Act
         boolean resultado = vehiculoService.deleteVehiculoById(1);
@@ -130,7 +130,7 @@ public class VehiculoServiceTest {
         // Arrange
         Vehiculo vehiculo = getVehiculos().get(0);
         Optional<Vehiculo> vehiculoOptionalVacio = Optional.empty();
-        when(vehiculoRepository.findById(vehiculo.getId_vehiculo())).thenReturn(vehiculoOptionalVacio);
+        when(vehiculoRepository.findById(vehiculo.getIdVehiculo())).thenReturn(vehiculoOptionalVacio);
 
         // Act
         boolean resultado = vehiculoService.deleteVehiculoById(1);
@@ -144,12 +144,12 @@ public class VehiculoServiceTest {
     private List<Vehiculo> getVehiculos() {
         List<Vehiculo> vehiculos = new ArrayList<>();
         Vehiculo vehiculo = new Vehiculo();
-        vehiculo.setId_vehiculo(1);
+        vehiculo.setIdVehiculo(1);
         vehiculo.setPatente("AB1234");
         vehiculo.setId_tipoVehiculo(0);
         vehiculos.add(vehiculo);
         vehiculo = new Vehiculo();
-        vehiculo.setId_vehiculo(2);
+        vehiculo.setIdVehiculo(2);
         vehiculo.setPatente("UB1234");
         vehiculo.setId_tipoVehiculo(0);
         vehiculos.add(vehiculo);

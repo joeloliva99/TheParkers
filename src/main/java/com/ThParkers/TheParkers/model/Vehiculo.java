@@ -7,16 +7,17 @@ import javax.persistence.*;
 public class Vehiculo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_vehiculo;
+    @Column(name="id_vehiculo")
+    private int idVehiculo;
     private String patente;
     private int id_tipoVehiculo;
 
-    public int getId_vehiculo() {
-        return id_vehiculo;
+    public int getIdVehiculo() {
+        return idVehiculo;
     }
 
-    public void setId_vehiculo(int id_vehiculo) {
-        this.id_vehiculo = id_vehiculo;
+    public void setIdVehiculo(int idVehiculo) {
+        this.idVehiculo = idVehiculo;
     }
 
     public String getPatente() {
