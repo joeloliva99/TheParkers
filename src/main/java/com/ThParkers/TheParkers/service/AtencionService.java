@@ -7,7 +7,7 @@ import com.ThParkers.TheParkers.model.Cliente;
 import com.ThParkers.TheParkers.model.Vehiculo;
 import com.ThParkers.TheParkers.repository.*;
 import org.springframework.stereotype.Service;
-import com.ThParkers.TheParkers.dummy.EmailDetails;
+import com.ThParkers.TheParkers.model.Emails;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,13 +27,13 @@ public class AtencionService {
     private TipoVehiculoService tipoVehiculoService;
     private BoletaRepository boletaRepository;
     private PlantaService plantaService;
-    private EmailServiceImpl emailService;
+    private EmailService emailService;
 
     public AtencionService(AtencionRepository atencionRepository, ClienteRepository clienteRepository,
                            VehiculoRepository vehiculoRepository, EstacionamientoService estacionamientoService,
                            PlantaRepository plantaRepository, TipoVehiculoService tipoVehiculoService,
                            BoletaRepository boletaRepository, PlantaService plantaService,
-                           EmailServiceImpl emailService) {
+                           EmailService emailService) {
         this.atencionRepository = atencionRepository;
         this.clienteRepository = clienteRepository;
         this.vehiculoRepository = vehiculoRepository;
@@ -109,7 +109,7 @@ public class AtencionService {
             // Actualizar la atención en la base de datos
             atencionRepository.saveAndFlush(atencionTemporal);
             // Crear un nuevo objeto con los detalles del correo que se enviará (destinatario, asunto y mensaje)
-            EmailDetails detalles = new EmailDetails();
+            Emails detalles = new Emails();
             // Obtener el ID del cliente
             int cliente = atencionTemporal.getIdCliente();
             // Obtener el correo del cliente
