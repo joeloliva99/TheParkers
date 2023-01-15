@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,8 +17,12 @@ public class Empleado {
 	private String rutEmpleado;
 	private String nombreEmpleado;
 	private int telefonoEmpleado;
-	private String cargo;
 	private int planta;
+	//private int departamentoID;
+	
+	@ManyToOne
+	private Departamento departamento;
+	
 	public int getId_empleado() {
 		return id_empleado;
 	}
@@ -42,16 +47,23 @@ public class Empleado {
 	public void setTelefonoEmpleado(int telefonoEmpleado) {
 		this.telefonoEmpleado = telefonoEmpleado;
 	}
-	public String getCargo() {
-		return cargo;
-	}
-	public void setCargo(String cargo) {
-		this.cargo = cargo;
-	}
 	public int getPlanta() {
 		return planta;
 	}
 	public void setPlanta(int planta) {
 		this.planta = planta;
 	}
+	/*public int getDepartamentoID() {
+		return departamentoID;
+	}
+	public void setDepartamentoID(int departamentoID) {
+		this.departamentoID = departamentoID;
+	}*/
+	public Departamento getDepartamento() {
+		return departamento;
+	}
+	public void setDepartamento(Departamento departamento) {
+		this.departamento = departamento;
+	}
+	
 }

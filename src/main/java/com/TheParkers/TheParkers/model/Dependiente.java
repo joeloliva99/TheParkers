@@ -19,7 +19,15 @@ public class Dependiente {
     private String sexo;
     private String relacion;
     
-    
+	public Dependiente(String rutEmpleado, String rutDependiente, String nombreDependiente, String sexo,
+			String relacion) {
+		super();
+		this.rutEmpleado = rutEmpleado;
+		this.rutDependiente = rutDependiente;
+		this.nombreDependiente = nombreDependiente;
+		this.sexo = sexo;
+		this.relacion = relacion;
+	}
 	public int getId_dependiente() {
 		return id_dependiente;
 	}
@@ -55,7 +63,5 @@ public class Dependiente {
 	}
 	public void setRutDependiente(String rutDependiente) {
 		this.rutDependiente = rutDependiente;
-	}
-    
-    
+	}   
 }
