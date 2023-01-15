@@ -48,15 +48,11 @@ public class ClienteServiceImpl implements ClienteService{
 			return false;
 		}
 	}
-
-	
-	
-	
 	
 	@Override
 	public Optional<Cliente> findClienteByRut(String rutCliente) {
 		// TODO Auto-generated method stub
-		return Optional.empty()
+		return Optional.empty();
 	}
 
 }

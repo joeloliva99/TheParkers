@@ -1,9 +1,12 @@
 package com.TheParkers.TheParkers.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -17,6 +20,10 @@ public class Departamento {
 	private int id_planta;
 	private int encargadoID;
 	private String cargo;
+	
+	@OneToMany(mappedBy = "empleado")
+	List <Empleado> empleados;
+	
 	
 	public Departamento(String nombreDepartamento, int id_planta, int encargadoID, String cargo) {
 		super();
@@ -55,4 +62,11 @@ public class Departamento {
 	public void setCargo(String cargo) {
 		this.cargo = cargo;
 	}
+	public List<Empleado> getEmpleados() {
+		return empleados;
+	}
+	public void setEmpleados(List<Empleado> empleados) {
+		this.empleados = empleados;
+	}
+	
 }
