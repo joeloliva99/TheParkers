@@ -1,5 +1,6 @@
 package com.ThParkers.TheParkers.service;
 
+import com.ThParkers.TheParkers.TheParkersApplication;
 import com.ThParkers.TheParkers.dummy.AtencionNueva;
 import com.ThParkers.TheParkers.model.Atencion;
 import com.ThParkers.TheParkers.model.Boleta;
@@ -53,10 +54,11 @@ public class AtencionService {
         // Indicador de si se realiza la atención o no (por defecto no)
         boolean continuar = false;
         //Este dato debería ser extraído desde la sesión de usuario. Dado que no está implementada, supondremos el funcionamiento con un dato ingresado a mano.
-        int id_empleado = 5;
+        int id_empleado = TheParkersApplication.idUser;
         //Este dato se debería obtener a través de la serión del usuario; no sería seguro que el propio usuario digitara la planta,
         //puesto que podría controlar la disponibilidad de estacionamientos en otras plantas.
-        int idPlanta = 4;
+        int idPlanta = TheParkersApplication.idPlanta;
+        System.out.println(idPlanta);
         // Obtener el ID del estacionamiento (en el Json solo se ingresa el número y el nivel donde se encuentra)
         int idEstacionamiento = estacionamientoService.devolverIdEstacionamiento(idPlanta,atencionNueva.getNronivel(),atencionNueva.getNroEstacionamiento());
         // Recuperar el cliente desde la base de datos
@@ -150,7 +152,8 @@ public class AtencionService {
         int descuento = 0;
         // El id de la planta se debería obtener a través de la sesión. Dado que no está implementada, haremos
         //de cuenta de que solo trabajamos con la planta 3
-        int idPlanta = 4;
+        int idPlanta = TheParkersApplication.idPlanta;
+        System.out.println(idPlanta);
         // Crear un nuevo objeto "Boleta" para almecenar en la base de datos
         Boleta boletaNueva = new Boleta();
         // Añadirle el ID de la atención a la boleta

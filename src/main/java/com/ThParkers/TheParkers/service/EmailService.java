@@ -22,7 +22,7 @@ public class EmailService {
     }
 
     @Value("${spring.mail.username}") private String sender;
-    public String sendSimpleMail(Emails details)
+    public boolean sendSimpleMail(Emails details)
     {
         try {
 
@@ -35,16 +35,18 @@ public class EmailService {
             mailMessage.setSubject(details.getSubject());
 
             javaMailSender.send(mailMessage);
-            return "Correo enviado con éxito...";
+            return true;
         }
 
         catch (Exception e) {
-            return "Algo ha fallado al enviar el correo";
+            return false;
         }
     }
 
 
     public String envioMasivo (EmailMasivoBase mailbase) {
+        boolean correcto = false;
+        int correctos =0;
         String mensaje = mailbase.getMensaje();
         String asunto = mailbase.getAsunto();
         List<Cliente> clienteList = clienteService.findAllClientes();
@@ -55,10 +57,21 @@ public class EmailService {
                 System.out.println(clienteList.get(i).getCorreo());
                 emailstemporal.setMsgBody(clienteList.get(i).getNombreCliente() + ":\n\n" + mensaje);
                 emailstemporal.setSubject(asunto);
-                sendSimpleMail(emailstemporal);
+                correcto = sendSimpleMail(emailstemporal);
+                if (correcto){
+                    correctos++;
+                }
             }
 
-            return "Los correos se han enviado con éxito";
+            if (correctos == clienteList.size()){
+                return "Todos los correos se han enviado correctamente";
+            }
+
+            if (correctos == 0){
+                return "No se ha podido enviar ningún correo. Inténtelo más tarde";
+            }
+
+            return "Algunos correos no han podido ser enviados";
         }
         return "¡No hay clientes para enviar correos!";
     }
