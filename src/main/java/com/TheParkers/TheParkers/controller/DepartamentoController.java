@@ -1,6 +1,7 @@
 package com.TheParkers.TheParkers.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,15 @@ public class DepartamentoController {
 		}
 	}
 	
-	
+	@GetMapping("/{id}")
+    public ResponseEntity<Departamento>getDepartamentoById(@PathVariable int id){
+		Optional<Departamento>departamentoOptional = departamentoService.findDepartamentoById(id);
+		if(departamentoOptional.isPresent()) {
+			return new ResponseEntity<>(departamentoOptional.get(), HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 	
 	@PostMapping(value = "")
     public ResponseEntity<Void>newDepartamento(@RequestBody Departamento departamento){

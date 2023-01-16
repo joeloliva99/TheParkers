@@ -20,15 +20,12 @@ public class DepartamentoServiceImpl implements DepartamentoService{
 		return repDepartamento.findAll();
 	}
 
+	
 	@Override
-	public Departamento BuscarDepartamentoPorId(int id) {
-		return repDepartamento.findById(id).get();
+	public Optional<Departamento> findDepartamentoById(int id) {
+		return repDepartamento.findDepartamentoById(id);
 	}
 
-	
-
-	
-	
 	@Override
 	public boolean GuardarDepartamento(Departamento departamento) {
 		repDepartamento.saveAndFlush(departamento);
