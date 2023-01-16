@@ -47,14 +47,15 @@ public class EmailService {
     public String envioMasivo (EmailMasivoBase mailbase) {
         boolean correcto = false;
         int correctos =0;
+        int correosTotales = 0;
         String mensaje = mailbase.getMensaje();
         String asunto = mailbase.getAsunto();
         List<Cliente> clienteList = clienteService.findAllClientes();
         if (!clienteList.isEmpty()){
             Emails emailstemporal = new Emails();
-            for (int i=0; i < clienteList.size(); i++) {
+            correosTotales = clienteList.size();
+            for (int i=0; i < correosTotales; i++) {
                 emailstemporal.setRecipient(clienteList.get(i).getCorreo());
-                System.out.println(clienteList.get(i).getCorreo());
                 emailstemporal.setMsgBody(clienteList.get(i).getNombreCliente() + ":\n\n" + mensaje);
                 emailstemporal.setSubject(asunto);
                 correcto = sendSimpleMail(emailstemporal);
@@ -63,7 +64,7 @@ public class EmailService {
                 }
             }
 
-            if (correctos == clienteList.size()){
+            if (correctos == correosTotales){
                 return "Todos los correos se han enviado correctamente";
             }
 
@@ -71,7 +72,7 @@ public class EmailService {
                 return "No se ha podido enviar ningún correo. Inténtelo más tarde";
             }
 
-            return "Algunos correos no han podido ser enviados";
+            return "Se han podido enviar " + correctos + " de los " + correosTotales + " correos en cola";
         }
         return "¡No hay clientes para enviar correos!";
     }
