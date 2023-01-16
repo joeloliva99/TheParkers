@@ -19,7 +19,6 @@ public class Departamento {
 	private String nombreDepartamento;
 	private int id_planta;
 	private int encargadoID;
-	private String cargo;
 	
 	@OneToMany(mappedBy = "empleado")
 	List <Empleado> empleados;
@@ -30,7 +29,6 @@ public class Departamento {
 		this.nombreDepartamento = nombreDepartamento;
 		this.id_planta = id_planta;
 		this.encargadoID = encargadoID;
-		this.cargo = cargo;
 	}
 	public int getDepartamentoID() {
 		return departamentoID;
@@ -55,12 +53,6 @@ public class Departamento {
 	}
 	public void setEncargadoID(int encargadoID) {
 		this.encargadoID = encargadoID;
-	}
-	public String getCargo() {
-		return cargo;
-	}
-	public void setCargo(String cargo) {
-		this.cargo = cargo;
 	}
 	public List<Empleado> getEmpleados() {
 		return empleados;

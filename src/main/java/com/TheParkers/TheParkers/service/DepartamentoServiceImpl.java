@@ -1,6 +1,7 @@
 package com.TheParkers.TheParkers.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,13 +25,31 @@ public class DepartamentoServiceImpl implements DepartamentoService{
 		return repDepartamento.findById(id).get();
 	}
 
+	
+
+	
+	
 	@Override
 	public boolean GuardarDepartamento(Departamento departamento) {
-		return false;
+		repDepartamento.saveAndFlush(departamento);
+		Optional<Departamento>departamentoOptional = repDepartamento.findDepartamentoById(departamento.getDepartamentoID());
+		if(departamentoOptional.isEmpty()){
+			repDepartamento.saveAndFlush(departamento);
+			departamentoOptional = repDepartamento.findDepartamentoById(departamento.getDepartamentoID());
+			return departamentoOptional.isPresent();
+		}else {
+			return false;
+		}
 	}
-
+	
 	@Override
 	public boolean BorrarDepartamentoPorId(int id) {
-		return false;
-	}
+		Optional<Departamento> departamentoOptional = repDepartamento.findById(id);
+        if (departamentoOptional.isPresent()){
+            repDepartamento.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+	}	
 }
