@@ -1,5 +1,6 @@
 package com.ThParkers.TheParkers.service;
 
+import com.ThParkers.TheParkers.TheParkersApplication;
 import com.ThParkers.TheParkers.repository.EstacionamientoRepository;
 import com.ThParkers.TheParkers.model.Estacionamiento;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,7 @@ public class EstacionamientoService {
     }
 
     public List<Estacionamiento> estacionamientosDisponiblesPorNivel(int nroNivel) {
-        //Este dato se debería obtener a través de la sesión del usuario. Un usuario de la planta 1 no tendría la necesidad
-        // de conocer qué estacionamientos están disponibles en la planta 2.
-        int idPlanta = 3;
+        int idPlanta = TheParkersApplication.idPlanta;
         int id_nivel = nivelService.devolverIDNivel(nroNivel,idPlanta);
         List<Estacionamiento> disponibles = findAllEstacionamientosByPlantaNivel(id_nivel).stream()
                 .filter(p -> p.isDisponible() == true).collect(Collectors.toList());

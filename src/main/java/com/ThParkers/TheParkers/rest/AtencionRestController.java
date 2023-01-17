@@ -33,7 +33,7 @@ public class AtencionRestController {
     public ResponseEntity<Void> addAtencion(@RequestBody AtencionNueva atencionNueva) {
         boolean creado = atencionService.addAtencion(atencionNueva);
         if (creado){
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -44,7 +44,7 @@ public class AtencionRestController {
         if (salidaIsAlright){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }

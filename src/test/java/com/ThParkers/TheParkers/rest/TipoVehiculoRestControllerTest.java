@@ -43,9 +43,6 @@ public class TipoVehiculoRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(tipoVehiculoRestController).build();
     }
 
-
-
-
     @Test
     public void siInvocoGetAllTiposVehiculosYExistenTiposVehiculosRetornaListaTiposVehiculosYStatusOk() throws Exception {
         // Arrange
@@ -149,8 +146,6 @@ public class TipoVehiculoRestControllerTest {
         // Assert
         assertEquals(HttpStatus.NOT_FOUND.value(),response.getStatus());
     }
-
-
 
 
     @Test

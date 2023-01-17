@@ -22,7 +22,7 @@ public class EstacionamientoRestController {
     }
 
     @GetMapping(value = "")
-    public ResponseEntity<List<Estacionamiento>> getAllEstacionamientos(){
+    public ResponseEntity<List<Estacionamiento>> getAllEstacionamientos() {
         List<Estacionamiento> estacionamientoList = estacionamientoService.findAllEstacionamientos();
         if (!estacionamientoList.isEmpty()){
             return new ResponseEntity<>(estacionamientoList, HttpStatus.OK);

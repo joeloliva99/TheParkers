@@ -22,7 +22,7 @@ public class BoletaRestController {
     }
 
     @GetMapping(value = "/{idAtencion}")
-    public ResponseEntity<Boleta> getEmpleadoById(@PathVariable int idAtencion) {
+    public ResponseEntity<Boleta> getBoletaByIdAtencion(@PathVariable int idAtencion) {
         Optional<Boleta> boletaOptional = boletaService.findBoletaByAtencion(idAtencion);
         if (boletaOptional.isPresent()) {
             return new ResponseEntity<>(boletaOptional.get(), HttpStatus.OK);
