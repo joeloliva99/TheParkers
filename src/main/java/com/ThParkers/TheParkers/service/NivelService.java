@@ -21,7 +21,7 @@ public class NivelService {
         if (nivelPlantaOptional.isPresent()){
             return nivelPlantaOptional.get().getId_nivel();
         } else {
-            return 0;
+            return -1;
         }
     }
 }

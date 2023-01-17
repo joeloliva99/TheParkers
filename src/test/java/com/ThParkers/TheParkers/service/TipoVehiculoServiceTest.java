@@ -127,8 +127,6 @@ public class TipoVehiculoServiceTest {
         assertFalse(resultado);
     }
 
-
-
     @Test
     public void siInvocoFindTipoVehiculoByIdDebeRetornarOptionalConTipoVehiculo(){
         // Arrange
