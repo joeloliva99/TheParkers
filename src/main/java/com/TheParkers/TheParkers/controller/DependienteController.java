@@ -58,17 +58,12 @@ public class DependienteController {
     }
     
     @DeleteMapping(value = "")
-    public ResponseEntity<Void> deleteDependienteByID(@PathVariable int idClient){
-        boolean eliminado = dependienteService.BorrarDependientePorId(idClient);
+    public ResponseEntity<Void> deleteDependienteByID(@PathVariable int id_dependiente){
+        boolean eliminado = dependienteService.BorrarDependientePorId(id_dependiente);
         if (eliminado){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-	
-	
-	
-    
- 
 }
