@@ -9,9 +9,9 @@ import com.TheParkers.TheParkers.model.Dependiente;
 public interface DependienteService {
 
 	public List<Dependiente>buscarTodosLosDependientes();
-	public Dependiente BuscarDependientePorRut(String rutDependiente);
-	public boolean Guardar(Dependiente dependiente);
-	public boolean BorrarDependientePorId(int id_dependiente);
+	public Optional<Dependiente> findDependienteByRutDependiente(String rutDependiente);
+	public boolean GuardarDependiente(Dependiente dependiente);
+	public boolean BorrarDependientePorId(int id);
 	
-	public Optional<Dependiente> findDependienteByRut(String rutDependiente);
+	
 }

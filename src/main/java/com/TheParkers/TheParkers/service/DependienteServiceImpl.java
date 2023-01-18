@@ -21,20 +21,24 @@ public class DependienteServiceImpl implements DependienteService{
 	public List<Dependiente> buscarTodosLosDependientes() {
 		return repDependiente.findAll();
 	}
-
 	@Override
-	public Dependiente BuscarDependientePorRut(String rutDependiente) {
-		return repDependiente.findDependienteByRutDependiente(rutDependiente).get();
+	public Optional<Dependiente> findDependienteByRutDependiente(String rutDependiente) {
+		return repDependiente.findDependienteByRutDependiente(rutDependiente);
 	}
-
 	@Override
-	public boolean Guardar(Dependiente dependiente) {
+	public boolean GuardarDependiente(Dependiente dependiente) {
 		repDependiente.saveAndFlush(dependiente);
 		Optional<Dependiente>dependienteOptional = repDependiente.findDependienteByRutDependiente(dependiente.getRutDependiente());
-		return dependienteOptional.isPresent();
-		
+		if(dependienteOptional.isEmpty()) {
+			repDependiente.saveAndFlush(dependiente);
+			dependienteOptional = repDependiente.findDependienteByRutDependiente(dependiente.getRutDependiente());
+			return dependienteOptional.isPresent();
+		}
+		else {
+			return false;
+		}
 	}
-
+	
 	@Override
 	public boolean BorrarDependientePorId(int id_dependiente) {
 		Optional<Dependiente>dependienteOptional = repDependiente.findById(id_dependiente);
@@ -46,16 +50,7 @@ public class DependienteServiceImpl implements DependienteService{
 		else {
 			return false;
 		}
-	}
-
-	@Override
-	public Optional<Dependiente> findDependienteByRut(String rutDependiente) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
-	}
-
-
+	}	
 	
-	
-	
+
 }

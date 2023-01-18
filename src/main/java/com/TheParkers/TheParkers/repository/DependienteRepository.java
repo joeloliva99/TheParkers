@@ -6,6 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.TheParkers.TheParkers.model.*;
 
 public interface DependienteRepository extends JpaRepository <Dependiente, Integer> {
-	Optional<Dependiente> findDependienteByNombre(String nombreDependiente);
 	Optional<Dependiente> findDependienteByRutDependiente(String rutDependiente);
 }
